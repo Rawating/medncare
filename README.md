@@ -1,0 +1,1 @@
+Hi! This repository is dedicated to my work-in-progress project, MednCare. MednCare is a simplistic website that helps you track your medicine dosage, timing, and general information. This website will be extremely helpful to users that face severe diseases and get overwhelmed by various medicines. 
