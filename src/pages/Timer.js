@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { playAlarm, fmtRemaining } from '../utils/alarm';
+import AlarmConfirmation from '../components/AlarmConfirmation';
 
 export default function Timer() {
   const [alarms, setAlarms] = useLocalStorage('medncare_alarms', []);
   const [medicineName, setMedicineName] = useState('');
   const [timeDelay, setTimeDelay] = useState('30');
   const [countdown, setCountdown] = useState('No timer running');
+  const [activeAlarm, setActiveAlarm] = useState(null);
   const countdownIntervalRef = useRef(null);
 
   useEffect(() => {
@@ -14,10 +16,10 @@ export default function Timer() {
       const now = Date.now();
       let changed = false;
       const updated = alarms.map(a => {
-        if (!a.fired && now >= a.targetTime) {
+        if (!a.fired && !a.status && now >= a.targetTime) {
           a.fired = true;
           try { playAlarm(); } catch {}
-          alert(`⏰ Reminder: Time to take your medicine: ${a.name}!`);
+          setActiveAlarm(a);
           changed = true;
         }
         return a;
@@ -26,6 +28,24 @@ export default function Timer() {
     }, 1000);
     return () => clearInterval(interval);
   }, [alarms, setAlarms]);
+
+  const handleAlarmConfirm = (status, skipReason = '') => {
+    if (!activeAlarm) return;
+    
+    const updated = alarms.map(a => {
+      if (a.id === activeAlarm.id) {
+        if (status === 'snooze') {
+          // Snooze for 5 minutes
+          return { ...a, targetTime: Date.now() + 5 * 60 * 1000, fired: false };
+        } else {
+          return { ...a, status, skipReason, confirmedAt: Date.now() };
+        }
+      }
+      return a;
+    });
+    setAlarms(updated);
+    setActiveAlarm(null);
+  };
 
   const startTimer = () => {
     const name = medicineName.trim();
@@ -40,7 +60,8 @@ export default function Timer() {
     }
 
     const targetTime = Date.now() + delayMins * 60 * 1000;
-    const newAlarm = { id: Date.now(), name, targetTime, fired: false, createdAt: Date.now() };
+    const alarmId = Date.now();
+    const newAlarm = { id: alarmId, name, targetTime, fired: false, status: null, createdAt: Date.now() };
     setAlarms([...alarms, newAlarm]);
 
     let remaining = delayMins * 60;
@@ -56,8 +77,7 @@ export default function Timer() {
       if (remaining <= 0) {
         clearInterval(countdownIntervalRef.current);
         setCountdown(`⏰ Time to take your medicine: ${name}!`);
-        try { playAlarm(); } catch {}
-        alert(`⏰ Reminder: Time to take your medicine: ${name}!`);
+        // The useEffect will handle showing the confirmation modal
       }
     }, 1000);
   };
@@ -73,6 +93,11 @@ export default function Timer() {
 
   return (
     <main className="timer-container">
+      <AlarmConfirmation 
+        alarm={activeAlarm} 
+        onConfirm={handleAlarmConfirm}
+        onClose={() => setActiveAlarm(null)}
+      />
       <h1 className="timer-title">Medicine Reminder</h1>
       <section className="timer-card">
         <div className="input-row">
@@ -126,6 +151,9 @@ export default function Timer() {
               .map(a => {
                 const due = Date.now() >= a.targetTime;
                 const remaining = a.targetTime - Date.now();
+                const statusChip = a.status === 'taken' ? 'chip-success' : 
+                                 a.status === 'skipped' ? 'chip-danger' : 
+                                 a.status === 'snooze' ? 'chip-warning' : '';
                 return (
                   <div key={a.id} className="alarm-item">
                     <div className="item-main">
@@ -134,10 +162,23 @@ export default function Timer() {
                         <span className="chip">
                           Due {new Date(a.targetTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
                         </span>
-                        <span className={`chip ${due ? 'chip-due' : ''}`}>
-                          {fmtRemaining(remaining)}
-                        </span>
+                        {a.status ? (
+                          <span className={`chip ${statusChip}`}>
+                            {a.status === 'taken' ? '✅ Taken' : 
+                             a.status === 'skipped' ? '❌ Skipped' : 
+                             a.status === 'snooze' ? '⏰ Snoozed' : ''}
+                          </span>
+                        ) : (
+                          <span className={`chip ${due ? 'chip-due' : ''}`}>
+                            {fmtRemaining(remaining)}
+                          </span>
+                        )}
                       </div>
+                      {a.skipReason && (
+                        <div className="item-notes" style={{fontSize: '0.85rem', marginTop: '4px'}}>
+                          Reason: {a.skipReason}
+                        </div>
+                      )}
                     </div>
                     <div className="item-actions">
                       <button className="btn-small btn-danger" onClick={() => deleteAlarm(a.id)}>Delete</button>

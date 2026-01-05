@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Tracker from './pages/Tracker';
 import Timer from './pages/Timer';
 import Records from './pages/Records';
+import Dashboard from './pages/Dashboard';
 import './App.css';
 
 function ProtectedRoute({ children }) {
@@ -20,6 +21,7 @@ function AppRoutes() {
       <Route path="/tracker" element={<ProtectedRoute><Tracker /></ProtectedRoute>} />
       <Route path="/timer" element={<ProtectedRoute><Timer /></ProtectedRoute>} />
       <Route path="/records" element={<ProtectedRoute><Records /></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
     </Routes>
   );
 }

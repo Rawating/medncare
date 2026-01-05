@@ -169,13 +169,13 @@ header {
 }
 .login .form-details {
     padding: 0 40px;
-    background: url("/login-img.jpg");
+    background: url("./assets/images/login-img.jpg");
     background-position: center;
     background-size: cover;
 }
 .signup .form-details {
     padding: 0 20px;
-    background: url("/signup-img.jpg");
+    background: url("./assets/images/signup-img.jpg");
     background-position: center;
     background-size: cover;
 }
@@ -593,3 +593,170 @@ select, textarea { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border
 .records-table th { background: #f1f8fa; font-weight: 700; }
 .records-table tr:nth-child(even) td { background: #fafcfd; }
 .records-table .btn-small { white-space: nowrap; }
+
+/* -------------------------------------- */
+/* Alarm Confirmation Modal               */
+/* -------------------------------------- */
+.alarm-confirmation-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 25;
+    width: 90%;
+    max-width: 500px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    transform: translate(-50%, -50%);
+    padding: 0;
+}
+.alarm-confirmation-content {
+    padding: 32px 24px;
+    text-align: center;
+}
+.alarm-confirmation-content h2 {
+    margin-bottom: 12px;
+    color: var(--text);
+}
+.alarm-medicine-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin: 8px 0;
+}
+.alarm-time {
+    color: var(--muted);
+    margin-bottom: 24px;
+}
+.confirmation-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+.confirmation-actions .btn {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-success {
+    background: #22c55e;
+    color: #fff;
+}
+.btn-success:hover {
+    background: #16a34a;
+    transform: translateY(-1px);
+}
+.btn-warning {
+    background: #f59e0b;
+    color: #fff;
+}
+.btn-warning:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+}
+.skip-reason-section {
+    text-align: left;
+}
+.skip-reason-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text);
+}
+.skip-reason-section textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
+/* -------------------------------------- */
+/* Dashboard page styles                  */
+/* -------------------------------------- */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 120px auto 80px;
+    padding: 0 24px;
+}
+.dashboard-title {
+    font-size: clamp(28px, 4vw, 38px);
+    margin-bottom: 24px;
+}
+.anomalies-section {
+    margin-bottom: 32px;
+}
+.anomalies-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: var(--text);
+}
+.anomalies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+.anomaly-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid;
+}
+.anomaly-medium {
+    border-left-color: #f59e0b;
+    background: #fffbeb;
+}
+.anomaly-high {
+    border-left-color: #ef4444;
+    background: #fef2f2;
+}
+.anomaly-type {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+.anomaly-message {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+.charts-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.chart-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+}
+.chart-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+
+/* Alarm status chips */
+.chip-success {
+    background: #dcfce7;
+    color: #166534;
+}
+.chip-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+.chip-warning {
+    background: #fef3c7;
+    color: #92400e;
+}

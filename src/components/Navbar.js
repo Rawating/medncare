@@ -13,7 +13,7 @@ export default function Navbar() {
   const handleLogout = () => {
     logout();
     const path = location.pathname;
-    if (['/tracker', '/timer', '/records'].includes(path)) {
+    if (['/tracker', '/timer', '/records', '/dashboard'].includes(path)) {
       navigate('/?auth=required');
     }
   };
@@ -39,6 +39,7 @@ export default function Navbar() {
                 <li><Link to="/tracker" onClick={() => setMenuOpen(false)}>Tracker</Link></li>
                 <li><Link to="/timer" onClick={() => setMenuOpen(false)}>Timer</Link></li>
                 <li><Link to="/records" onClick={() => setMenuOpen(false)}>Records</Link></li>
+                <li><Link to="/dashboard" onClick={() => setMenuOpen(false)}>Dashboard</Link></li>
               </>
             )}
           </ul>
